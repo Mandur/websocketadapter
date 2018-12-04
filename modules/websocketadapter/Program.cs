@@ -91,14 +91,14 @@ namespace websocketadapter
 
             Console.WriteLine($"Received message: {counterValue}, Body: [{messageString}]");
             if(Startup.hubContext!=null){
-                await Startup.hubContext.Clients.All.SendAsync("method",message.ConnectionDeviceId, messageString);
+                Console.WriteLine("sending a message");
+                await Startup.hubContext.Clients.All.SendAsync("ReceiveMessage",message.ConnectionDeviceId, messageString);
             }else {
                 Console.WriteLine("the SignalR context is not ready, please make a call to the webApi to activate it");
             }
             if (!string.IsNullOrEmpty(messageString))
             {
                 var pipeMessage = new Message(messageBytes);
-                Console.WriteLine("before loop");
 
                 if (message.Properties.Count > 0)
                 {

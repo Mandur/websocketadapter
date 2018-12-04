@@ -45,20 +45,21 @@ namespace websocketadapter
             // {
             //     app.UseHsts();
             // }
-        
+            app.UseStaticFiles();
+            
             app.UseSignalR(route =>
             {
                 route.MapHub<MessagingHub>("/chathub");
             });
             app.UseMvc();
-            //     app.Use( (context, next) =>
-            // {
-            //     hubContext = context.RequestServices
-            //                             .GetRequiredService<IHubContext<MessagingHub>>();
+                app.Use( (context, next) =>
+            {
+                hubContext = context.RequestServices
+                                        .GetRequiredService<IHubContext<MessagingHub>>();
                                         
-            //     return Task.FromResult<object>(null);
-            //     //...
-            // });
+                return Task.FromResult<object>(null);
+                //...
+            });
          }
     }
 }
