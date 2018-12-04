@@ -23,6 +23,7 @@ namespace websocketadapter
         static void Main(string[] args)
         {
             Init().Wait();
+            CreateWebHostBuilder(args).Build().Run();
 
             // Wait until the app unloads or is cancelled
             var cts = new CancellationTokenSource();
@@ -31,7 +32,7 @@ namespace websocketadapter
             WhenCancelled(cts.Token).Wait();
             Console.CancelKeyPress += (sender, cpe) => cts.Cancel();
             WhenCancelled(cts.Token).Wait();
-            CreateWebHostBuilder(args).Build().Run();
+        
 
         }
 
