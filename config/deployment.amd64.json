@@ -52,7 +52,7 @@
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "mycontainermikou.azurecr.io/websocketadapter:0.0.33-amd64",
+              "image": "mycontainermikou.azurecr.io/websocketadapter:0.0.35-amd64",
               "createOptions": "{\"ExposedPorts\":{\"80/tcp\":{}},\"HostConfig\":{\"PortBindings\":{\"80/tcp\":[{\"HostPort\":\"5000\"}]}}}"
             }
           }

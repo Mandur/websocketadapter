@@ -1,16 +1,17 @@
-    using System;
-    using System.IO;
-    using System.Runtime.InteropServices;
-    using System.Runtime.Loader;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.Azure.Devices.Client;
-    using Microsoft.AspNetCore;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Logging;
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Runtime.Loader;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Azure.Devices.Client;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.SignalR;
 
 namespace websocketadapter
 {
@@ -76,7 +77,7 @@ namespace websocketadapter
         static async Task<MessageResponse> PipeMessage(Message message, object userContext)
         {
             int counterValue = Interlocked.Increment(ref counter);
-
+            Console.WriteLine("test");
             var moduleClient = userContext as ModuleClient;
             if (moduleClient == null)
             {
@@ -84,20 +85,35 @@ namespace websocketadapter
             }
 
             byte[] messageBytes = message.GetBytes();
-            string messageString = Encoding.UTF8.GetString(messageBytes);
-            Console.WriteLine($"Received message: {counterValue}, Body: [{messageString}]");
+            Console.WriteLine("msgId " + message.ConnectionDeviceId);
 
+            string messageString = Encoding.UTF8.GetString(messageBytes);
+
+            Console.WriteLine($"Received message: {counterValue}, Body: [{messageString}]");
+            if(Startup.hubContext!=null){
+                await Startup.hubContext.Clients.All.SendAsync("method",message.ConnectionDeviceId, messageString);
+            }else {
+                Console.WriteLine("the SignalR context is not ready, please make a call to the webApi to activate it");
+            }
             if (!string.IsNullOrEmpty(messageString))
             {
                 var pipeMessage = new Message(messageBytes);
-                foreach (var prop in message.Properties)
+                Console.WriteLine("before loop");
+
+                if (message.Properties.Count > 0)
                 {
-                    pipeMessage.Properties.Add(prop.Key, prop.Value);
+                    foreach (var prop in message.Properties)
+                    {
+                        pipeMessage.Properties.Add(prop.Key, prop.Value);
+                    }
+
+                    Console.WriteLine("prep to send back");
                 }
                 await moduleClient.SendEventAsync("output1", pipeMessage);
                 Console.WriteLine("Received message sent");
             }
             return MessageResponse.Completed;
+
         }
     }
 }
