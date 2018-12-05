@@ -57,8 +57,8 @@
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "mycontainermikou.azurecr.io/websocketadapter:0.0.52-amd64",
-              "createOptions": "{\"ExposedPorts\":{\"80/tcp\":{}},\"Mounts\":{\"Type\":\"bind\",\"Source\":\"/mnt\",\"Destination\":\"/mnt\",\"Mode\":\"\",\"RW\":true,\"Propagation\":\"rprivate\"},\"HostConfig\":{\"Binds\":[\"/mnt:/mnt\"],\"PortBindings\":{\"80/tcp\":[{\"HostPort\":\"5000\"}]}}}"
+              "image": "mycontainermikou.azurecr.io/websocketadapter:0.0.53-amd64",
+              "createOptions": "{\"ExposedPorts\":{\"80/tcp\":{}},\"Mounts\":{\"Type\":\"bind\",\"Source\":\"/mnt\",\"Destination\":\"/mnt\",\"Mode\":\"\",\"RW\":true,\"Propagation\":\"rprivate\"},\"HostConfig\":{\"Binds\":[\"/mnt:/mnt\"],\"PortBindings\":{\"80/tcp\":[{\"HostPort\":\"5003\"}]}}}"
             }
           }
         }
