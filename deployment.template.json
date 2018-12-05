@@ -22,7 +22,7 @@
           "edgeAgent": {
             "type": "docker",
             "settings": {
-              "image": "mcr.microsoft.com/azureiotedge-agent:1.0",
+              "image": "mcr.microsoft.com/azureiotedge-agent:1.0.4",
               "createOptions": {}
             }
           },
@@ -31,7 +31,7 @@
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "mcr.microsoft.com/azureiotedge-hub:1.0",
+              "image": "mcr.microsoft.com/azureiotedge-hub:1.0.4",
               "createOptions": {
                 "HostConfig": {
                   "PortBindings": {
@@ -65,10 +65,16 @@
             "settings": {
               "image": "mcr.microsoft.com/azureiotedge-simulated-temperature-sensor:1.0",
               "createOptions": {}
+            },
+            "env": {
+              "MessageCount": {
+                "value": "-1"
+              }
             }
           },
           "websocketadapter": {
             "version": "1.0",
+            
             "type": "docker",
             "status": "running",
             "restartPolicy": "always",
@@ -78,7 +84,18 @@
                 "ExposedPorts": {
                   "80/tcp": {}
                 },
+                "Mounts": 
+                {
+                  "Type": "bind",
+                  "Source": "/mnt",
+                  "Destination": "/mnt",
+                  "Mode": "",
+                  "RW": true,
+                  "Propagation": "rprivate"
+              },
                 "HostConfig": {
+                  "Binds": [
+                    "/mnt:/mnt"],
                   "PortBindings": {
                     "80/tcp": [
                       {

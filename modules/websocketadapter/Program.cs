@@ -33,7 +33,7 @@ namespace websocketadapter
             WhenCancelled(cts.Token).Wait();
             Console.CancelKeyPress += (sender, cpe) => cts.Cancel();
             WhenCancelled(cts.Token).Wait();
-        
+
 
         }
 
@@ -90,12 +90,7 @@ namespace websocketadapter
             string messageString = Encoding.UTF8.GetString(messageBytes);
 
             Console.WriteLine($"Received message: {counterValue}, Body: [{messageString}]");
-            if(Startup.hubContext!=null){
-                Console.WriteLine("sending a message");
-                await Startup.hubContext.Clients.All.SendAsync("ReceiveMessage",message.ConnectionDeviceId, messageString);
-            }else {
-                Console.WriteLine("the SignalR context is not ready, please make a call to the webApi to activate it");
-            }
+            await ProcessMessage(message, messageString);
             if (!string.IsNullOrEmpty(messageString))
             {
                 var pipeMessage = new Message(messageBytes);
@@ -113,6 +108,33 @@ namespace websocketadapter
                 Console.WriteLine("Received message sent");
             }
             return MessageResponse.Completed;
+
+        }
+
+        private static async Task ProcessMessage(Message message, string messageString)
+        {
+            //send it to the SignalR people
+            if (Startup.hubContext != null)
+            {
+                Console.WriteLine("sending a message");
+                await Startup.hubContext.Clients.All.SendAsync("ReceiveMessage", message.ConnectionDeviceId, messageString);
+            }
+            else
+            {
+                Console.WriteLine("the SignalR context is not ready, please make a call to the webApi to activate it");
+            }
+
+
+            string path = @"/mnt/tmp.txt";
+ 
+
+            using (StreamWriter sw = File.AppendText(path))
+            {
+                System.Console.WriteLine("starting writing");
+                sw.WriteLine(String.Format("#{0}:{1}:{2}",message.SequenceNumber, message.CreationTimeUtc, messageString));
+                 System.Console.WriteLine("done writing");
+            }
+            //serialize messages             
 
         }
     }

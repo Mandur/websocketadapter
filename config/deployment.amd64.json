@@ -21,7 +21,7 @@
           "edgeAgent": {
             "type": "docker",
             "settings": {
-              "image": "mcr.microsoft.com/azureiotedge-agent:1.0",
+              "image": "mcr.microsoft.com/azureiotedge-agent:1.0.4",
               "createOptions": "{}"
             }
           },
@@ -30,7 +30,7 @@
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "mcr.microsoft.com/azureiotedge-hub:1.0",
+              "image": "mcr.microsoft.com/azureiotedge-hub:1.0.4",
               "createOptions": "{\"HostConfig\":{\"PortBindings\":{\"5671/tcp\":[{\"HostPort\":\"5671\"}],\"8883/tcp\":[{\"HostPort\":\"8883\"}],\"443/tcp\":[{\"HostPort\":\"443\"}]}}}"
             }
           }
@@ -44,6 +44,11 @@
             "settings": {
               "image": "mcr.microsoft.com/azureiotedge-simulated-temperature-sensor:1.0",
               "createOptions": "{}"
+            },
+            "env": {
+              "MessageCount": {
+                "value": "-1"
+              }
             }
           },
           "websocketadapter": {
@@ -52,8 +57,8 @@
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "mycontainermikou.azurecr.io/websocketadapter:0.0.37-amd64",
-              "createOptions": "{\"ExposedPorts\":{\"80/tcp\":{}},\"HostConfig\":{\"PortBindings\":{\"80/tcp\":[{\"HostPort\":\"5000\"}]}}}"
+              "image": "mycontainermikou.azurecr.io/websocketadapter:0.0.51-amd64",
+              "createOptions": "{\"ExposedPorts\":{\"80/tcp\":{}},\"Mounts\":{\"Type\":\"bind\",\"Source\":\"/mnt\",\"Destination\":\"/mnt\",\"Mode\":\"\",\"RW\":true,\"Propagation\":\"rprivate\"},\"HostConfig\":{\"Binds\":[\"/mnt:/mnt\"],\"PortBindings\":{\"80/tcp\":[{\"HostPort\":\"5000\"}]}}}"
             }
           }
         }
