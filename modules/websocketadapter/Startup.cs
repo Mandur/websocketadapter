@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,14 +9,15 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace websocketadapter
 {
+
     public class Startup
     {
-       public static IHubContext<MessagingHub> hubContext;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -31,11 +30,12 @@ namespace websocketadapter
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSignalR();
+            services.AddSingleton<IHostedService, ModuleClientService>();
             //services.AddRouting();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
             // if (env.IsDevelopment())
             // {
@@ -52,14 +52,7 @@ namespace websocketadapter
                 route.MapHub<MessagingHub>("/chathub");
             });
             app.UseMvc();
-                app.Use( (context, next) =>
-            {
-                hubContext = context.RequestServices
-                                        .GetRequiredService<IHubContext<MessagingHub>>();
-                                        
-                return Task.FromResult<object>(null);
-                //...
-            });
+          
          }
     }
 }
