@@ -35,7 +35,7 @@ namespace websocketadapter
                    // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "MappApp/dist";
+                configuration.RootPath = "MapApp/dist";
             });
             
             //services.AddRouting();
