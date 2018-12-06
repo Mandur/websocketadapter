@@ -53,7 +53,18 @@
                   }
                 }
               }
-            }
+            },
+            "env": {
+              "OptimizeForPerformance": {
+                "value": "false"
+              },
+              "mqttSettings__enabled": {
+                "value": "false"
+              },
+              "httpSettings__enabled": {
+                "value": "false"
+              }
+}
           }
         },
         "modules": {

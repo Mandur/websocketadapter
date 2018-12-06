@@ -53,7 +53,7 @@
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "mycontainermikou.azurecr.io/websocketadapter:0.0.69-amd64",
+              "image": "mycontainermikou.azurecr.io/websocketadapter:0.0.70-arm32v7",
               "createOptions": "{\"ExposedPorts\":{\"80/tcp\":{}},\"Mounts\":{\"Type\":\"bind\",\"Source\":\"/mnt\",\"Destination\":\"/mnt\",\"Mode\":\"\",\"RW\":true,\"Propagation\":\"rprivate\"},\"HostConfig\":{\"Binds\":[\"/mnt:/mnt\"],\"PortBindings\":{\"80/tcp\":[{\"HostPort\":\"5003\"}]}}}"
             }
           },
@@ -63,7 +63,7 @@
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "mycontainermikou.azurecr.io/positiongenerator:0.0.69-amd64",
+              "image": "mycontainermikou.azurecr.io/positiongenerator:0.0.70-arm32v7",
               "createOptions": "{}"
             }
           }
