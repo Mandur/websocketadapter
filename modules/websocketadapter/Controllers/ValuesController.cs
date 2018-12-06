@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
 
 namespace websocketadapter
 {
@@ -14,8 +15,13 @@ namespace websocketadapter
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-           
-            return new string[] { "value1", "value3" };
+            List<string> result = new List<string>();
+           var lines = System.IO.File.ReadLines("/mnt/tmp.txt");
+            foreach (var line in lines){
+                result.Add(line);
+            }
+            // Process line
+            return result;
         }
 
         // GET api/values/5

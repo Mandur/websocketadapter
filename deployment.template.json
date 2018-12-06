@@ -57,24 +57,9 @@
           }
         },
         "modules": {
-          "tempSensor": {
-            "version": "1.0",
-            "type": "docker",
-            "status": "running",
-            "restartPolicy": "always",
-            "settings": {
-              "image": "mcr.microsoft.com/azureiotedge-simulated-temperature-sensor:1.0",
-              "createOptions": {}
-            },
-            "env": {
-              "MessageCount": {
-                "value": "-1"
-              }
-            }
-          },
+        
           "websocketadapter": {
             "version": "1.0",
-            
             "type": "docker",
             "status": "running",
             "restartPolicy": "always",
@@ -84,18 +69,18 @@
                 "ExposedPorts": {
                   "80/tcp": {}
                 },
-                "Mounts": 
-                {
+                "Mounts": {
                   "Type": "bind",
                   "Source": "/mnt",
                   "Destination": "/mnt",
                   "Mode": "",
                   "RW": true,
                   "Propagation": "rprivate"
-              },
+                },
                 "HostConfig": {
                   "Binds": [
-                    "/mnt:/mnt"],
+                    "/mnt:/mnt"
+                  ],
                   "PortBindings": {
                     "80/tcp": [
                       {
@@ -106,6 +91,16 @@
                 }
               }
             }
+          },
+          "PositionGenerator": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULES.PositionGenerator}",
+              "createOptions": {}
+            }
           }
         }
       }
@@ -115,7 +110,7 @@
         "schemaVersion": "1.0",
         "routes": {
           "websocketadapterToIoTHub": "FROM /messages/modules/websocketadapter/outputs/* INTO $upstream",
-          "sensorTowebsocketadapter": "FROM /messages/modules/tempSensor/outputs/temperatureOutput INTO BrokeredEndpoint(\"/modules/websocketadapter/inputs/input1\")"
+          "sensorTowebsocketadapter": "FROM /messages/modules/PositionGenerator/outputs/* INTO BrokeredEndpoint(\"/modules/websocketadapter/inputs/input1\")"
         },
         "storeAndForwardConfiguration": {
           "timeToLiveSecs": 7200

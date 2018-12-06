@@ -52,7 +52,7 @@ namespace websocketadapter
             {
                 app.UseHsts();
             }
-             System.Console.WriteLine("spa"); 
+    
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             
@@ -60,12 +60,7 @@ namespace websocketadapter
             {
                 route.MapHub<MessagingHub>("/chathub");
             });
-               app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
-            });
+               app.UseMvc();
 
             app.UseSpa(spa =>
             {

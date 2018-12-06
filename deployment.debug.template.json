@@ -76,6 +76,16 @@
               "image": "${MODULES.websocketadapter.debug}",
               "createOptions": {}
             }
+          },
+          "PositionGenerator": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULES.PositionGenerator.debug}",
+              "createOptions": {}
+            }
           }
         }
       }
@@ -85,7 +95,8 @@
         "schemaVersion": "1.0",
         "routes": {
           "websocketadapterToIoTHub": "FROM /messages/modules/websocketadapter/outputs/* INTO $upstream",
-          "sensorTowebsocketadapter": "FROM /messages/modules/tempSensor/outputs/temperatureOutput INTO BrokeredEndpoint(\"/modules/websocketadapter/inputs/input1\")"
+          "sensorTowebsocketadapter": "FROM /messages/modules/tempSensor/outputs/temperatureOutput INTO BrokeredEndpoint(\"/modules/websocketadapter/inputs/input1\")",
+          "PositionGeneratorToIoTHub": "FROM /messages/modules/PositionGenerator/outputs/* INTO $upstream"
         },
         "storeAndForwardConfiguration": {
           "timeToLiveSecs": 7200

@@ -100,7 +100,7 @@ namespace websocketadapter
             using (StreamWriter sw = File.AppendText(path))
             {
                 System.Console.WriteLine("starting writing");
-                sw.WriteLine(String.Format("#{0}:{1}:{2}", message.SequenceNumber, message.CreationTimeUtc, messageString));
+                sw.WriteLine(String.Format("{0}",  messageString));
                 System.Console.WriteLine("done writing");
             }
             //serialize messages             

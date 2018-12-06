@@ -3,6 +3,7 @@ import * as signalR from "@aspnet/signalr";
 import { map } from 'rxjs/operators';
 // declare the leaflet variable
 declare let L;
+declare let mapref;
 
 @Component({
   selector: 'app-root',
@@ -13,15 +14,15 @@ export class AppComponent implements OnInit {
   initMap() {
     //Create and render the map
     //const map = L.map('map').setView([47.5952, -122.3316], 16);
-    var map = L.map('map').setView([51.505, -0.09], 13);
+    console.debug("initaliazing map");
+    // initialize the map
+    var map = L.map('map').setView([47.30, 8.52], 13);
 
-    //var tileLayer = L.tileLayer('assets/tiles/{z}/{x}/{y}.png', {
-    //  cursor: true,
-    //  minZoom: 0,
-    //  maxZoom: 19,
-    //  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    //});
-
+    // load a tile layer
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    }).addTo(map);
+    return map;
     //var kmlLayer = new L.KML("/api/kml", { async: true });
 
     //kmlLayer.on("loaded", function (e) {
@@ -29,26 +30,33 @@ export class AppComponent implements OnInit {
     //});
 
     //map.addLayer(kmlLayer);
-   // map.addLayer(tileLayer);
+    // map.addLayer(tileLayer);
   }
 
-    ngOnInit(): void {
-      console.debug("initaliazing map");
-      this.initMap();
-      console.debug("connecting to websocket");
-      const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/chathub")
-        .build();
+  ngOnInit(): void {
 
-      connection.start().catch(err => document.write(err));
+    var mapref = this.initMap();
 
-      connection.on("messageReceived", (username: string, message: string) => {
-     
+    console.debug("connecting to websocket");
 
-        console.debug(username + " " + message);
-      });
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl("/chathub")
+      .build();
 
-    }
+    connection.start().catch(err => document.write(err));
+
+    connection.on("ReceiveMessage", (username: string, message: string) => {
+      let msg = JSON.parse(message);
+      var circle = L.circle([msg.Position.Lat, msg.Position.Lon], {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.5,
+        radius: 500
+      }).addTo(mapref);
+      console.debug(username + " " + message);
+    });
+
+  }
   title = 'MapApp';
 
 }

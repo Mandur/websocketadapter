@@ -36,29 +36,24 @@
           }
         },
         "modules": {
-          "tempSensor": {
-            "version": "1.0",
-            "type": "docker",
-            "status": "running",
-            "restartPolicy": "always",
-            "settings": {
-              "image": "mcr.microsoft.com/azureiotedge-simulated-temperature-sensor:1.0",
-              "createOptions": "{}"
-            },
-            "env": {
-              "MessageCount": {
-                "value": "-1"
-              }
-            }
-          },
           "websocketadapter": {
             "version": "1.0",
             "type": "docker",
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "mycontainermikou.azurecr.io/websocketadapter:0.0.54-amd64",
+              "image": "mycontainermikou.azurecr.io/websocketadapter:0.0.68-amd64",
               "createOptions": "{\"ExposedPorts\":{\"80/tcp\":{}},\"Mounts\":{\"Type\":\"bind\",\"Source\":\"/mnt\",\"Destination\":\"/mnt\",\"Mode\":\"\",\"RW\":true,\"Propagation\":\"rprivate\"},\"HostConfig\":{\"Binds\":[\"/mnt:/mnt\"],\"PortBindings\":{\"80/tcp\":[{\"HostPort\":\"5003\"}]}}}"
+            }
+          },
+          "PositionGenerator": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "mycontainermikou.azurecr.io/positiongenerator:0.0.68-amd64",
+              "createOptions": "{}"
             }
           }
         }
@@ -69,7 +64,7 @@
         "schemaVersion": "1.0",
         "routes": {
           "websocketadapterToIoTHub": "FROM /messages/modules/websocketadapter/outputs/* INTO $upstream",
-          "sensorTowebsocketadapter": "FROM /messages/modules/tempSensor/outputs/temperatureOutput INTO BrokeredEndpoint(\"/modules/websocketadapter/inputs/input1\")"
+          "sensorTowebsocketadapter": "FROM /messages/modules/PositionGenerator/outputs/* INTO BrokeredEndpoint(\"/modules/websocketadapter/inputs/input1\")"
         },
         "storeAndForwardConfiguration": {
           "timeToLiveSecs": 7200
